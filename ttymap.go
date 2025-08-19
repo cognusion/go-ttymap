@@ -18,14 +18,18 @@ type TtyMap struct {
 	maplock  sync.RWMutex
 	doneChan chan struct{}
 	tty      *tty.TTY
+	runOnce  func()
 }
 
 // New returns a barely initialized TtyMap.
 func New() *TtyMap {
-	return &TtyMap{
+	z := &TtyMap{
 		keyMap:   make(map[rune]KeyFunc),
 		doneChan: make(chan struct{}),
 	}
+	z.runOnce = sync.OnceFunc(z.run)
+
+	return z
 }
 
 // Upsert either updates or adds a func(rune) for keypress of the specified rune.
@@ -49,8 +53,12 @@ func (z *TtyMap) Remove(r rune) {
 }
 
 // Run opens the TTY and waits for a keypress. Run is intended to be executed in its
-// own goro, but could be run inline.
+// own goro, but could be run inline. Will only execute once, but may be called concurrently.
 func (z *TtyMap) Run() {
+	z.runOnce()
+}
+
+func (z *TtyMap) run() {
 	var err error
 	z.tty, err = tty.Open()
 	if err != nil {
@@ -80,6 +88,7 @@ func (z *TtyMap) Run() {
 }
 
 // Close will signal the Run() loop to end, and close the TTY.
+// You must create a New() if you want to continue mapping the keypresses.
 func (z *TtyMap) Close() {
 	close(z.doneChan)
 	z.tty.Close()

@@ -77,7 +77,7 @@ KeyFunc is a type used for callbacks upon keypresses.
 
 
 
-## <a name="TtyMap">type</a> [TtyMap](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=333:448#L16)
+## <a name="TtyMap">type</a> [TtyMap](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=333:465#L16)
 ``` go
 type TtyMap struct {
     // contains filtered or unexported fields
@@ -92,7 +92,7 @@ TtyMap is cool, eh?
 
 
 
-### <a name="New">func</a> [New](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=494:512#L24)
+### <a name="New">func</a> [New](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=511:529#L25)
 ``` go
 func New() *TtyMap
 ```
@@ -102,16 +102,17 @@ New returns a barely initialized TtyMap.
 
 
 
-### <a name="TtyMap.Close">func</a> (\*TtyMap) [Close](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=1896:1920#L83)
+### <a name="TtyMap.Close">func</a> (\*TtyMap) [Close](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=2128:2152#L92)
 ``` go
 func (z *TtyMap) Close()
 ```
 Close will signal the Run() loop to end, and close the TTY.
+You must create a New() if you want to continue mapping the keypresses.
 
 
 
 
-### <a name="TtyMap.Remove">func</a> (\*TtyMap) [Remove](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=1144:1175#L44)
+### <a name="TtyMap.Remove">func</a> (\*TtyMap) [Remove](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=1204:1235#L48)
 ``` go
 func (z *TtyMap) Remove(r rune)
 ```
@@ -122,17 +123,17 @@ uncertain if the rune has been Upsertted previously.
 
 
 
-### <a name="TtyMap.Run">func</a> (\*TtyMap) [Run](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=1370:1392#L53)
+### <a name="TtyMap.Run">func</a> (\*TtyMap) [Run](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=1486:1508#L57)
 ``` go
 func (z *TtyMap) Run()
 ```
 Run opens the TTY and waits for a keypress. Run is intended to be executed in its
-own goro, but could be run inline.
+own goro, but could be run inline. Will only execute once, but may be called concurrently.
 
 
 
 
-### <a name="TtyMap.Upsert">func</a> (\*TtyMap) [Upsert](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=817:859#L34)
+### <a name="TtyMap.Upsert">func</a> (\*TtyMap) [Upsert](https://github.com/cognusion/go-ttymap/tree/master/ttymap.go?s=877:919#L38)
 ``` go
 func (z *TtyMap) Upsert(r rune, f KeyFunc)
 ```
